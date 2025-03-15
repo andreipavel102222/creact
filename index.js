@@ -5,7 +5,7 @@ import { appConfig } from "./src/creact.js";
 
 const container = document.getElementById('container');
 const appObject = CReact.buildVDOM(AppComponent);
-
+console.log(appObject);
 render(appObject, container);
 
 appConfig.firstRender = false;

@@ -39,11 +39,18 @@ class CReact {
       newElement.children = type(props, children);
 
       appConfig.firstRender && resetCurrentStateNode();
+
+      appConfig.firstRender && setStateNodeRef(stateNode, newElement);
     }
     
-    appConfig.firstRender && setStateNodeRef(stateNode, newElement);
-    
     return newElement;
+  }
+
+  static createTextElement(value) {
+    return {
+      type: 'text',
+      value
+    }
   }
 
   static buildVDOM(appComponent) {
@@ -133,7 +140,7 @@ function triggerReconciliation(componentStateNode) {
   console.log(oldElement);
   console.log(newElement);
 
-  reconciliation(oldElement, newElement);
+  // reconciliation(oldElement, newElement);
 }
 
 function addDomRefToNewElement(newElement, oldElement) {

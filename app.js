@@ -7,7 +7,7 @@ const NameComponent = (props) => {
       title: 'Name'
     },
     [
-      props.name
+      CReact.createTextElement(props.name)
     ]
   )
 }
@@ -17,12 +17,12 @@ const GreetingComponent = function(props) {
     'h1',
     null, 
     [
-      'Hi ',
+      CReact.createTextElement('Hi '),
       CReact.createElement(
         NameComponent,
         props, []
       ),
-      ' from CReact',
+      CReact.createTextElement(' from CReact'),
     ],
   )
 }
@@ -47,7 +47,7 @@ const ButtonComponent = function(_props, _children) {
         'p',
         null,
         [
-          counter.toString()
+          CReact.createTextElement(counter)
         ]
       ),
       CReact.createElement(
@@ -60,7 +60,7 @@ const ButtonComponent = function(_props, _children) {
           }
         },
         [
-          'Increase'
+          CReact.createTextElement('Increase')
         ]
       ),
       CReact.createElement(
@@ -73,7 +73,7 @@ const ButtonComponent = function(_props, _children) {
           }
         },
         [
-          'decrease'
+          CReact.createTextElement('decrease')
         ]
       ),
     ]

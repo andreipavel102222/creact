@@ -3,8 +3,9 @@ export function render(vDOMElement, container) {
   let domElement;
 
   //check if element is a string
-  if(typeof vDOMElement === 'string') {
-    domElement = document.createTextNode(vDOMElement);
+  if(vDOMElement.type === 'text') {
+    domElement = document.createTextNode(vDOMElement.value);
+    vDOMElement.domRef = domElement;
     container.appendChild(domElement);
     return;
   }
