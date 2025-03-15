@@ -114,10 +114,16 @@ export function useState(initialValue, stateNode) {
   const componentStateNode = stateNode;
   const currentIndex = componentStateNode.indexStates;
 
-  componentStateNode.states[currentIndex] = componentStateNode.states[currentIndex] || initialValue;
+  componentStateNode.states[currentIndex] = componentStateNode.states[currentIndex] === undefined ? initialValue : componentStateNode.states[currentIndex];
   
   const setState = (fn) => {
-    componentStateNode.states[currentIndex] = fn(componentStateNode.states[currentIndex]);
+    if(typeof fn === 'function') {
+      componentStateNode.states[currentIndex] = fn(componentStateNode.states[currentIndex]);
+    }
+    else {
+      componentStateNode.states[currentIndex] = fn;
+    }
+  
     resetStateIndexes(stateNode);
     appConfig.curentStateNode = stateNode;
     triggerReconciliation(componentStateNode);
@@ -135,23 +141,7 @@ function triggerReconciliation(componentStateNode) {
 
   parent.children = newElement;
 
-  console.log(appConfig.vDOM);
-
-  console.log(oldElement);
-  console.log(newElement);
-
-  // reconciliation(oldElement, newElement);
-}
-
-function addDomRefToNewElement(newElement, oldElement) {
-  if(typeof oldElement === 'string')
-    return;
-
-  newElement.domRef = oldElement.domRef;
-
-  if(newElement.children && newElement.children.length > 0) {
-    newElement.children.forEach((child, index) => addDomRefToNewElement(child, oldElement.children[index]));
-  }
+  reconciliation(oldElement, newElement);
 }
 
 //rerender

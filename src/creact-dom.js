@@ -36,35 +36,53 @@ export function render(vDOMElement, container) {
 }
 
 export function reconciliation(oldElement, newElement) {
-  // tag element
-  if(typeof oldElement.type === 'string' && oldElement.type === newElement.type) {
-    const domElement = oldElement.ref;
-    
-    newElement.ref = domElement;
+  if(newElement.type === oldElement.type) {
+    if(newElement.type === 'text') {
+      const domElement = oldElement.domRef;
 
-    if(newElement.props && typeof newElement.props === 'object') {
-      for(const [key, value] of Object.entries(newElement.props)){
-        domElement[key] = value;
-      }
+      newElement.domRef = domElement;
+
+      domElement.textContent = newElement.value;
+
+      return;
     }
+    else if(typeof newElement.type === 'string') {
+      const domElement = oldElement.domRef;
 
-    newElement.children.forEach((child, index) => {
-      if(typeof child === 'object' && child.type){
-        reconciliation(oldElement.children[index], child);
-      }
-      else if(typeof child === 'string') {
-        
-      }
-    })
+      newElement.domRef = domElement;
 
+      if(newElement.props && typeof newElement.props === 'object') {
+        for(const [key, value] of Object.entries(newElement.props)){
+          domElement[key] = value;
+        }
+      }
+      
+      newElement.children.forEach((newElementChild, index) => {
+        reconciliation(oldElement.children[index], newElementChild);
+      });
+
+      return;
+    }
+    else if(newElement.component) {
+      newElement.children.forEach((newElementChild, index) => {
+        reconciliation(oldElement.children[index], newElementChild);
+      });  
+      
+      return;
+    }
+  }
+  // TO DO: check if this is the same as the third if
+  else if((oldElement.component && newElement.component && oldElement.type.name === newElement.type.name)){
+    newElement.children.forEach((newElementChild, index) => {
+      reconciliation(oldElement.children[index], newElementChild);
+    });  
+    
     return;
   }
-  
-  if((oldElement.component && newElement.component && oldElement.type.name === newElement.type.name)) {
-    return;
-  }
-
   //TO DO: handle conditional rendering
+  else {
+
+  }
 }
 
 

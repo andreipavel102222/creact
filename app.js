@@ -81,7 +81,7 @@ const ButtonComponent = function(_props, _children) {
 }
 
 const InputComponent = () => {
-  const [value, setValue] = useState('Name');
+  const [value, setValue] = useState('Name', InputComponent.stateNode);
 
   const handleInput = (e) => {
     console.log(e);
@@ -96,7 +96,7 @@ const InputComponent = () => {
         'p',
         null,
         [
-          value
+          CReact.createTextElement(value)
         ]
       ),
       CReact.createElement(
@@ -118,7 +118,7 @@ const ContainerComponent = (_props, _children) => {
     [
       CReact.createElement(GreetingComponent, {name: 'Mircea'}, []),
       CReact.createElement(ButtonComponent, null, []),
-      // CReact.createElement(InputComponent, null, []),
+      CReact.createElement(InputComponent, null, []),
     ]
   )
 }
