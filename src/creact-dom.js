@@ -1,5 +1,5 @@
 
-function render(vDOMElement, container) {
+export function render(vDOMElement, container) {
   let domElement;
 
   //check if element is a string
@@ -23,6 +23,8 @@ function render(vDOMElement, container) {
     }
   }
   
+  vDOMElement.domRef = domElement;
+
   //render children
   if(vDOMElement.children && vDOMElement.children.length > 0) {
     vDOMElement.children.forEach(children => {render(children, domElement)});
@@ -32,5 +34,37 @@ function render(vDOMElement, container) {
   container.appendChild(domElement);
 }
 
-export default render;
+export function reconciliation(oldElement, newElement) {
+  // tag element
+  if(typeof oldElement.type === 'string' && oldElement.type === newElement.type) {
+    const domElement = oldElement.ref;
+    
+    newElement.ref = domElement;
+
+    if(newElement.props && typeof newElement.props === 'object') {
+      for(const [key, value] of Object.entries(newElement.props)){
+        domElement[key] = value;
+      }
+    }
+
+    newElement.children.forEach((child, index) => {
+      if(typeof child === 'object' && child.type){
+        reconciliation(oldElement.children[index], child);
+      }
+      else if(typeof child === 'string') {
+        
+      }
+    })
+
+    return;
+  }
+  
+  if((oldElement.component && newElement.component && oldElement.type.name === newElement.type.name)) {
+    return;
+  }
+
+  //TO DO: handle conditional rendering
+}
+
+
 

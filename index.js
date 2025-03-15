@@ -1,4 +1,4 @@
-import render from "./src/creact-dom.js";
+import { render } from "./src/creact-dom.js";
 import AppComponent from "./app.js";
 import CReact from "./src/creact.js";
 import { appConfig } from "./src/creact.js";

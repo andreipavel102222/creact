@@ -1,4 +1,4 @@
-import render from "./creact-dom.js";
+import { render, reconciliation } from "./creact-dom.js";
 import AppComponent from "./../app.js";
 
 export const appConfig = {
@@ -17,7 +17,7 @@ class CReact {
       children: [],
       parent: appConfig.curentStateNode,
     };
-
+    
     if(typeof type === 'string') {
       newElement = {
         type,
@@ -27,19 +27,21 @@ class CReact {
     }
     else if(typeof type === 'function') {
       newElement = {
-        type: type.name,
+        type,
         props,
         component: true,
       }
       
       appConfig.firstRender && setCurrentStateNode(stateNode);
 
-      newElement.children = type(props, children, stateNode);
+      appConfig.firstRender && attachStateNode(type, stateNode);
+
+      newElement.children = type(props, children);
 
       appConfig.firstRender && resetCurrentStateNode();
     }
     
-    appConfig.firstRender && setStateNodeRef(stateNode, type);
+    appConfig.firstRender && setStateNodeRef(stateNode, newElement);
     
     return newElement;
   }
@@ -47,11 +49,6 @@ class CReact {
   static buildVDOM(appComponent) {
     const app = appComponent();
     appConfig.vDOM = app;
-    console.log(appConfig.vDOM);
-    console.log('=====');
-    console.log(appConfig.stateTree);
-    console.log('=====');
-    console.log(appConfig.firstRender);
     return app;
   }
 }
@@ -83,8 +80,15 @@ function resetCurrentStateNode() {
   appConfig.curentStateNode = appConfig.curentStateNode.parent;
 }
 
-function setStateNodeRef(stateNode, type) {
-  stateNode.ref = type.name;
+function setStateNodeRef(stateNode, newElement) {
+  stateNode.ref = newElement;
+}
+
+function attachStateNode(component, stateNode) {
+  Object.defineProperty(component, 'stateNode', {
+    value: stateNode,
+    writable: false
+  })
 }
 
 function resetStateIndexes(stateNode) {
@@ -105,15 +109,42 @@ export function useState(initialValue, stateNode) {
 
   componentStateNode.states[currentIndex] = componentStateNode.states[currentIndex] || initialValue;
   
-  const setState = (newState) => {
-    componentStateNode.states[currentIndex] = newState;
+  const setState = (fn) => {
+    componentStateNode.states[currentIndex] = fn(componentStateNode.states[currentIndex]);
     resetStateIndexes(stateNode);
     appConfig.curentStateNode = stateNode;
-    console.log(appConfig.stateTree);
+    triggerReconciliation(componentStateNode);
   }
   
   componentStateNode.indexStates++;
+
   return [componentStateNode.states[currentIndex], setState];
+}
+
+function triggerReconciliation(componentStateNode) {
+  const parent = componentStateNode.ref;
+  const newElement = componentStateNode.ref.type();
+  const oldElement = componentStateNode.ref.children;
+
+  parent.children = newElement;
+
+  console.log(appConfig.vDOM);
+
+  console.log(oldElement);
+  console.log(newElement);
+
+  reconciliation(oldElement, newElement);
+}
+
+function addDomRefToNewElement(newElement, oldElement) {
+  if(typeof oldElement === 'string')
+    return;
+
+  newElement.domRef = oldElement.domRef;
+
+  if(newElement.children && newElement.children.length > 0) {
+    newElement.children.forEach((child, index) => addDomRefToNewElement(child, oldElement.children[index]));
+  }
 }
 
 //rerender

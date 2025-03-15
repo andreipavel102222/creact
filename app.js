@@ -28,16 +28,15 @@ const GreetingComponent = function(props) {
 }
 
 
-const ButtonComponent = function(_props, _children, stateNode) {
-  let [counter, setCounter] = useState(0, stateNode);
-  
+const ButtonComponent = function(_props, _children) {
+  let [counter, setCounter] = useState(0, ButtonComponent.stateNode);
+
   const increaseCounter = () => {
-    console.log(counter);
-    setCounter(counter + 1);
+    setCounter((counter) => counter + 1);
   }
 
   const decreaseCounter = () => {
-    setCounter(counter - 1);
+    setCounter((counter) => counter - 1);
   }
 
   return CReact.createElement(
@@ -112,7 +111,7 @@ const InputComponent = () => {
   )
 }
 
-const ContainerComponent = (_props, _children, _state) => {
+const ContainerComponent = (_props, _children) => {
   return CReact.createElement(
     'div',
     null,
