@@ -1,7 +1,6 @@
 import CReact, { useState } from "./src/creact.js";
 
 const NameComponent = (props) => {
-  console.log('name');
   return CReact.createElement(
     'span',
     {
@@ -14,7 +13,6 @@ const NameComponent = (props) => {
 }
 
 const GreetingComponent = function(props) {
-  console.log('greeting');
   return CReact.createElement(
     'h1',
     null, 
@@ -31,8 +29,7 @@ const GreetingComponent = function(props) {
 }
 
 
-const ButtonComponent = function(_props, _children) {
-  console.log('button component');
+const ButtonComponent = function() {
   let [counter, setCounter] = useState(0, ButtonComponent.stateNode);
 
   const increaseCounter = () => {
@@ -60,7 +57,12 @@ const ButtonComponent = function(_props, _children) {
           disabled: false,
           onclick: increaseCounter,
           style: {
-            color: '#fff'
+            padding: '0.5rem 1rem',
+            margin: '0px 1rem 0px 0px',
+            backgroundColor: '#fff',
+            border: '1px solid blue',
+            borderRadius: '10px',
+            cursor: 'pointer'
           }
         },
         [
@@ -73,7 +75,11 @@ const ButtonComponent = function(_props, _children) {
           disabled: false,
           onclick: decreaseCounter,
           style: {
-            color: '#fff'
+            padding: '0.5rem 1rem',
+            backgroundColor: '#fff',
+            border: '1px solid blue',
+            borderRadius: '10px',
+            cursor: 'pointer'
           }
         },
         [
@@ -95,7 +101,10 @@ const InputComponent = (props) => {
         'input',
         {
           value: props.value,
-          oninput: props.handleInput
+          oninput: props.handleInput,
+          style: {
+            marginTop: '1rem'
+          }
         },
         []
       )
@@ -104,7 +113,6 @@ const InputComponent = (props) => {
 }
 
 const ContainerComponent = () => {
-  console.log('container');
   const [value, setValue] = useState('Mircea', ContainerComponent.stateNode);
 
   const handleInput = (e) => {

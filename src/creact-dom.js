@@ -1,4 +1,21 @@
 
+function attachStyle(domElement, style) {
+  for(const [key, value] of Object.entries(style)) {
+    domElement.style[key] = value;
+  }
+}
+
+function setProps(domElement, props) {
+  for(const [key, value] of Object.entries(props)){
+    if(key === 'style') {
+      attachStyle(domElement, value);
+    }
+    else {
+      domElement[key] = value;
+    }
+  }  
+}
+
 export function render(vDOMElement, container) {
   let domElement;
 
@@ -19,9 +36,7 @@ export function render(vDOMElement, container) {
 
   // attach props to the element
   if(vDOMElement.props && typeof vDOMElement.props === 'object') {
-    for(const [key, value] of Object.entries(vDOMElement.props)){
-      domElement[key] = value;
-    }
+    setProps(domElement, vDOMElement.props);
   }
   
   vDOMElement.domRef = domElement;
@@ -52,9 +67,7 @@ export function reconciliation(oldElement, newElement) {
       newElement.domRef = domElement;
 
       if(newElement.props && typeof newElement.props === 'object') {
-        for(const [key, value] of Object.entries(newElement.props)){
-          domElement[key] = value;
-        }
+        setProps(domElement, newElement.props);
       }
       
       newElement.children.forEach((newElementChild, index) => {
