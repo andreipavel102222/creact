@@ -64,10 +64,7 @@ export function reconciliation(oldElement, newElement) {
       return;
     }
     else if(newElement.component) {
-      newElement.children.forEach((newElementChild, index) => {
-        reconciliation(oldElement.children[index], newElementChild);
-      });  
-      
+      reconciliation(oldElement.children, newElement.children);      
       return;
     }
   }

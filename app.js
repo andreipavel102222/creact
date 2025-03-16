@@ -1,6 +1,7 @@
 import CReact, { useState } from "./src/creact.js";
 
 const NameComponent = (props) => {
+  console.log('name');
   return CReact.createElement(
     'span',
     {
@@ -13,6 +14,7 @@ const NameComponent = (props) => {
 }
 
 const GreetingComponent = function(props) {
+  console.log('greeting');
   return CReact.createElement(
     'h1',
     null, 
@@ -20,7 +22,8 @@ const GreetingComponent = function(props) {
       CReact.createTextElement('Hi '),
       CReact.createElement(
         NameComponent,
-        props, []
+        props, 
+        []
       ),
       CReact.createTextElement(' from CReact'),
     ],
@@ -29,6 +32,7 @@ const GreetingComponent = function(props) {
 
 
 const ButtonComponent = function(_props, _children) {
+  console.log('button component');
   let [counter, setCounter] = useState(0, ButtonComponent.stateNode);
 
   const increaseCounter = () => {
@@ -80,30 +84,18 @@ const ButtonComponent = function(_props, _children) {
   )
 }
 
-const InputComponent = () => {
-  const [value, setValue] = useState('Name', InputComponent.stateNode);
-
-  const handleInput = (e) => {
-    console.log(e);
-    setValue(e.target.value);
-  }
+const InputComponent = (props) => {
+  console.log('input component');
 
   return CReact.createElement(
     'div',
     null,
     [
       CReact.createElement(
-        'p',
-        null,
-        [
-          CReact.createTextElement(value)
-        ]
-      ),
-      CReact.createElement(
         'input',
         {
-          value: value,
-          oninput: handleInput
+          value: props.value,
+          oninput: props.handleInput
         },
         []
       )
@@ -111,14 +103,21 @@ const InputComponent = () => {
   )
 }
 
-const ContainerComponent = (_props, _children) => {
+const ContainerComponent = () => {
+  console.log('container');
+  const [value, setValue] = useState('Mircea', ContainerComponent.stateNode);
+
+  const handleInput = (e) => {
+    setValue(e.target.value);
+  }
+
   return CReact.createElement(
     'div',
     null,
     [
-      CReact.createElement(GreetingComponent, {name: 'Mircea'}, []),
+      CReact.createElement(GreetingComponent, { name: value }, []),
       CReact.createElement(ButtonComponent, null, []),
-      CReact.createElement(InputComponent, null, []),
+      CReact.createElement(InputComponent, { value, handleInput }, []),
     ]
   )
 }
